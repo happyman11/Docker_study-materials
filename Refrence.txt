@@ -1,0 +1,335 @@
+https://www.youtube.com/watch?v=bi0cKgmRuiA
+
+https://www.docker.com ->> desktop version --> docker- -v
+https://www.docker.com/
+
+code ready _->>
+Dokerising -> Dockerfile --build image, Image-run/create container, Container where our code runs
+
+Dockerfile
+
+FROM python:3.8
+#move file to the docker directory 
+ADD main.py .
+#install
+RUN pip install request beautifulsoup4
+
+CMD["python", "./main.py"]
+
+Create docker image command : docker built -t <name of the image> <location> --> build the image
+
+Run image: docker run -t -i <container name> ( i and t are optional i for interactive mode abd t will give us sudo terminal)
+
+
+Installing under docker
+
+enviroment python3 -m vene vene
+. venv/bin/activate --> activate the enviroment
+install the dependencies
+
+Save requirevement pip freeze > requirement.txt
+
+Dockerfile
+
+FROM python:3.8
+#move file to the docker directory
+
+ WORKDIR /fastapi/  -->> starting point directory
+COPy requirements.txt  .
+RUN pip install -r requirements.txt
+
+COPY ./app ./app
+
+CMD["python", "./app/main.py"]
+
+#####
+
+docs.docker.com
+https://www.youtube.com/watch?v=fqMOX6JJhGo
+
+💻 Practice Labs: https://kodekloud.com/p/docker-labs​
+
+🔗 KodeKloud Website: https://www.kodekloud.com​
+
+🎥 Tutorial from KodeKloud. Check out their Youtube Channel: https://www.youtube.com/user/mmumshad
+
+: docker run image_name
+
+ Image :Package,Plan Container: Own enviroment - lives untill the process is running it does not stores or run the OS
+ 
+Community and Enterprise
+
+Community :
+MAC windows for dockerdesktop, linux docker only
+
+docs.docker.com
+ install from convinient script
+
+:docker version
+
+hub.docker.com -- collection of images --- whale say sample image --> perfprm steps
+
+Commands
+
+docker run  <imagename> --- if image is not present it will pull from docker hub
+docker run  <imagename: version>  with the version
+
+docker ps  ---list all the containers and basic information
+          -a  -- list all the running and recently runned containers
+docker stop <id/name>
+docker rm <container name>   -- to remove the container from running list in order to save space
+docker images  -- list of image and sizes
+docker rmi <name of the image> -- remove the image but make sure no container is running in this container
+docker pull <imagename> -- pull the ubuntu image and stores it in the system
+
+
+docker exec <command for the container> --- to execute the command in container
+docker run -d <image name> ----to runn the container in cackground ut it will show in  ps -a
+docker attach <id/name> ----to bring the container in upground
+
+docker tun -t -i <imagename> run in interactive way
+docker tun -ti <imagename>
+
+Port mapping
+
+each docker has its interna; ip and container as well
+
+internal IP only inside from the docker container 
+
+else map the port to the docker container
+
+docker run -p 80(desktop):5000(docker) <imagename>
+
+
+Volume mappimg
+
+
+docker run -v /opt/(outside the container):/var/lib/(inside the container)
+all data will be stored in the external folder 
+
+
+docker inspect <name of container> -->>return in jason format
+docker logs <container name> -->> for the container run in bacground
+
+
+Enviroment variable
+
+x=os.enviroment.get('APP_colour')-- in python code
+run by this -->> export APP_color=blue;python app.py
+
+
+Inspect enviroment
+
+docker inspect ->  config -->> ENV
+
+docker build Dockerfile -t 
+docker run -e APP_color= red  <image name>
+
+
+Docker images
+ steps image saved 
+Create image  
+<name of the image> <location>
+	
+docker push username/<name of the image> -->> to available public;y on the docker repo
+ 
+
+if building image fails it will use the above ;ayers present in catch to build the image again
+
+
+Docker CMD and ENTRPOINT
+
+docker run ubuntu sleep 5
+
+CMD["command","parameters"] --->>always like this 
+
+
+Entrypoint it get appended with the command stated in entry point and given with image see imahe saved
+
+
+ write entry point using switch in image 8
+
+##1 hrs
+ 
+Networking
+
+image 9
+Docker create 3 network by default Bridge default network container attached to , None and Host
+
+Bridge: default network container attached to, if we want to associate the container to the we can do it by docker rn <imagename> --network=host or none
+Private internal network for outside map to host or assocoate the network to host
+None: Not attched to any network
+Host:
+
+172.17.0.1 
+
+isolate the network in Bridge by docker network create\
+                                         -- driver bridge\
+                                         --subnet 182.18.0.0/16
+                                         custom isolation network
+
+docker network ls -->>to inspect network
+
+docker inspect <name of the container> -- to see full info
+
+container can reach each other by using names..
+all container can resolve eachother by name docker has its own DNS 
+
+Storage
+
+file system 
+by default it creates this  -- see image 10,11,12,13
+----->>   /var/lib/docker
+layered achitechture is uded to build the image 
+docker volume create the volume outsie the container which cannot get deleted if the container is deleted
+docker volume create <name> ,, if not created and used it will create on its own and mount 
+docker run -v data_volume:/var/lib/sql  mount the folder to the image  so when the container is deleted the file remains same
+
+for external -- bid mounting  image 14
+
+storege drivers are responsible for the storage management some of them are choose best driver automatically
+AUFS Ubuntu, ZFS, BTRFS, DEVICE Mapper next option, Overlay,Overlay2
+
+Docker Compose
+
+docker-compose.yml
+we can create the yaml file with the following image 
+image 25 
+
+docker-compose up to bring up the container
+
+application flow image 27
+
+combination of services tools db languages
+
+supposr the image are there
+ image 28 see steps and naming
+ run and linked them
+
+links cmd line option to link 2 container 
+image 29
+image 30
+
+docker-compose.yml
+
+redis:
+   image:redis
+image 31, 31-a
+
+if you want to buid the image and then use it refer image 32
+
+different version of docker compose file
+
+version 2 or up  we have to speify the version automatically create the dedicated bridge network
+ the container uses the link by their names
+v2 specify the sequence by depends_on
+
+v3 -- with docker swards 
+image 33
+
+Network we dedicated front end and backend network 
+
+do in version file image 34
+
+
+
+
+Docker Registry
+
+cloud where all image are stored on cloud
+when we run docker run <image> if not found locally it download from the cloud i.e. registry
+
+docker run user/image id we dont give the user name it assumes image name is same as the user
+images stored in docker hub docker run docker.io/user/image 
+ 
+private registry image 15
+
+Deploy own private registry ---image 16
+name image is registry 
+
+Docker Engine
+
+refered as host with docker installed on it 
+image 17
+when we install docker we install
+1. Docker CLi-- cli to interact need not be on same host work as remote docker -H=<ip:port>||remote-docker-engine:2375|| image name
+2. RestAPi--- Api interface use to talk wirth daemon using program
+3. Docker Doemon--- backgroud operation image container volume network
+
+use namespace to isolate the workspace  ---image 18
+
+linux ps which is unique
+ there is no hard isolation between the container and host so namespace comes to play
+ COntainer has own pid root 
+ sampe process is running in host and container but with different name 
+ Docker uses control group to restrict the amount of the resources used by container in CPU ==cgroups
+ docker run --cpus=.5 <image> -- stages that docker image does not consupe more thn 50% of the cpu resources
+ docker run --memory=100m <imagename>
+ image 19
+
+Docker on windows
+strictly with linix container 
+ Docker tool box and Docker desktop
+ Docker tool box
+   original support to windows
+   Vm ->> linex->> dockertoolbox--> docker
+   image 20
+ Docker Desktop
+   create the linux underlinth on hyper-v then install docker
+   1:50
+   in 2016 support came for windows container
+   we can switch to windows containers
+   image 21,22(for detail) Hyper V on window 10 
+ 
+Not both on same windows any one only
+   
+Docker on MAC
+ not mac based image or containers
+ Same as windows
+
+Docker Orchestron
+ Number of user increase  because load is too high along with health
+ host crashes then container is not accesable we need dedicated person to monitor but it is not practical
+ Contrainer Orchestration is just a solution for that..
+ set of tool that help orchestration to create instance as replica
+docker service create --replica=100 <image name>
+some help to automatically scale the application 
+load balancer
+networking between container and many other
+Docker swarm, Kubernetics, MESOS solution for orchestron
+ 
+
+Docker Swarm
+
+Combine multiple docker machine into single machine
+take care of trigerring servies and load balancing
+
+Swarm manager docker swarm init 
+      docker join swarm <image names 
+      run image
+      docker swarm orchestrator does all of the procees of monotoring load balancing by its own
+      docker sevices is one of the instance of container that runs in the node of the swan cluster
+      
+      image 23
+     docker services create --replicas=3 <image name> run on mam=nager noder
+   
+Kubernets
+
+introduction 
+kubernet cli
+image 24 
+
+uses docker support 
+
+consist of node
+node is a worker machiner where conter is loauch by the kubernetics machines
+we have cluster who manages it?  mater node waches for the node 
+image 25 wha we install actually
+
+
+
+
+
+
+
+
